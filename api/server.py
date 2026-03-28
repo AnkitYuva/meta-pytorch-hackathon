@@ -81,16 +81,17 @@ def health_check() -> Dict[str, str]:
 
 
 @app.post("/reset", summary="Start a new episode")
-def reset(request: ResetRequest) -> Dict[str, Any]:
+def reset(request: Optional[ResetRequest] = None) -> Dict[str, Any]:
     """
     Initialise the environment for the given task_id (0=easy, 1=medium, 2=hard).
     Returns the initial Observation.
     """
     global _last_task_id
     try:
-        obs = _env.reset(task_id=request.task_id)
-        _last_task_id = request.task_id
-        return {"observation": obs.model_dump()}
+        tid = request.task_id if request else 0
+        obs = _env.reset(task_id=tid)
+        _last_task_id = tid
+        return obs.model_dump()
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -156,7 +157,7 @@ def grader() -> Dict[str, Any]:
 
     state_dict = env_state.model_dump()
     task_id = state_dict["task_id"]
-    history = state_dict["conversation_history"]
+    history = state_dict["history"]
 
     result = grade_episode(task_id, history, state_dict)
     return {

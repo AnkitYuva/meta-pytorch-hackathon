@@ -48,7 +48,7 @@ observation_space:
     - name: customer_message
       type: string
       description: Latest customer message.
-    - name: conversation_history
+    - name: history
       type: list[dict]
       description: Full turn-by-turn conversation history.
     - name: sentiment

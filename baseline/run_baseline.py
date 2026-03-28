@@ -103,7 +103,7 @@ def run_rule_based_baseline() -> List[Dict[str, Any]]:
 
         # Grade the episode
         env_state = env.state().model_dump()
-        grade = grade_episode(task_id, env_state["conversation_history"], env_state)
+        grade = grade_episode(task_id, env_state["history"], env_state)
         results.append(grade)
 
     return results
@@ -164,7 +164,7 @@ Be empathetic, professional, and concise. Choose the most appropriate action."""
 
             # Build conversation context for LLM
             messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-            for h in obs.conversation_history:
+            for h in obs.history:
                 role = "user" if h["role"] == "customer" else "assistant"
                 messages.append({"role": role, "content": h["content"]})
 
@@ -211,7 +211,7 @@ Be empathetic, professional, and concise. Choose the most appropriate action."""
 
         # Grade episode
         env_state = env.state().model_dump()
-        grade = grade_episode(task_id, env_state["conversation_history"], env_state)
+        grade = grade_episode(task_id, env_state["history"], env_state)
         results.append(grade)
         print(f"  SCORE: {grade['score']}")
 

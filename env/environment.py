@@ -110,7 +110,7 @@ class CustomerSupportEnv:
             "issue_type": scenario["issue_type"],
             "current_customer_message": scenario["customer_message"],
             "sentiment": scenario["sentiment"],
-            "conversation_history": [
+            "history": [
                 {
                     "role": "customer",
                     "content": scenario["customer_message"],
@@ -143,7 +143,7 @@ class CustomerSupportEnv:
         expected_actions: list = task["expected_actions"]
 
         # ---- Record agent action in history ---------------------------
-        s["conversation_history"].append({
+        s["history"].append({
             "role": "agent_action",
             "action_type": action.action_type,
             "content": action.message,
@@ -194,7 +194,7 @@ class CustomerSupportEnv:
         next_msg = self._generate_followup(action, s)
         if next_msg and not s["done"]:
             s["current_customer_message"] = next_msg
-            s["conversation_history"].append(
+            s["history"].append(
                 {"role": "customer", "content": next_msg, "action_type": None}
             )
             s["sentiment"] = _detect_sentiment(next_msg)
@@ -228,7 +228,7 @@ class CustomerSupportEnv:
             issue_type=s["issue_type"],
             current_customer_message=s["current_customer_message"],
             sentiment=s["sentiment"],
-            conversation_history=s["conversation_history"],
+            history=s["history"],
             turn=s["turn"],
             max_turns=s["max_turns"],
             resolved=s["resolved"],
@@ -245,9 +245,9 @@ class CustomerSupportEnv:
         s = self._state
         return Observation(
             customer_message=s["current_customer_message"],
-            conversation_history=[
+            history=[
                 {"role": t["role"], "content": t["content"]}
-                for t in s["conversation_history"]
+                for t in s["history"]
             ],
             sentiment=s["sentiment"],
             issue_type=s["issue_type"],

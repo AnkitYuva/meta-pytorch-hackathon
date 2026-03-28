@@ -60,7 +60,7 @@ Each step the agent receives:
 | Field | Type | Description |
 |-------|------|-------------|
 | `customer_message` | `string` | Latest customer message |
-| `conversation_history` | `list[dict]` | Full turn history (role + content) |
+| `history` | `list[dict]` | Full turn history (role + content) |
 | `sentiment` | `string` | `positive / neutral / frustrated / angry` |
 | `issue_type` | `string` | Category of issue (e.g. `missing_package_refund`) |
 | `turn` | `int` | Current turn number |

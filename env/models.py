@@ -42,7 +42,7 @@ class Observation(BaseModel):
     customer_message: str = Field(
         ..., description="The latest message from the customer."
     )
-    conversation_history: List[Dict[str, Any]] = Field(
+    history: List[Dict[str, Any]] = Field(
         default_factory=list,
         description="Full turn-by-turn conversation history.",
     )
@@ -107,7 +107,7 @@ class EnvironmentState(BaseModel):
     issue_type: str
     current_customer_message: str
     sentiment: str
-    conversation_history: List[Dict[str, Any]]
+    history: List[Dict[str, Any]]
     turn: int
     max_turns: int
     resolved: bool
