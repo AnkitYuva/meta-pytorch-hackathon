@@ -1,9 +1,28 @@
-__pycache__/
-*.pyc
+# environment variables
 .env
+
+# dependencies
+node_modules/
 venv/
 .venv/
-.idea/
-.vscode/
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+
+# build files
+dist/
+build/
+
+# logs
 *.log
 out.txt
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
