@@ -7,7 +7,7 @@ name = "customer-support-openenv"
 version = "1.0.0"
 description = "A real-world OpenEnv environment simulating a Customer Support Automation system."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 authors = [
     { name = "Ankit Umesh Naik" }
 ]
@@ -18,8 +18,13 @@ dependencies = [
     "openai>=1.0.0",
     "httpx>=0.24.0",
     "python-dotenv>=1.0.0",
-    "PyYAML>=6.0"
+    "PyYAML>=6.0",
+    "openenv-core>=0.2.0"
 ]
+
+[project.scripts]
+openenv-server = "server.app:main"
+server = "server.app:main"
 
 [project.urls]
 Homepage = "https://github.com/AnkitYuva/meta-pytorch-hackathon"
