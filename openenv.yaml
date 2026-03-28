@@ -1,0 +1,97 @@
+name: customer-support-openenv
+version: "1.0.0"
+description: >
+  A real-world OpenEnv environment simulating a Customer Support Automation
+  system. An AI agent reads customer messages, selects actions (reply, refund,
+  escalate, ask_info), and is evaluated on correctness, helpfulness, and tone.
+  Designed to train and benchmark agents on real enterprise support workflows.
+
+domain: customer-support
+author: Ankit Umesh Naik
+license: MIT
+
+# Task definitions
+tasks:
+  - id: 0
+    name: order_status_inquiry
+    difficulty: easy
+    description: Agent must reply helpfully to a simple order tracking question.
+  - id: 1
+    name: missing_package_refund
+    difficulty: medium
+    description: >
+      Agent must process a refund or gather order details for a customer who
+      has not received their package.
+  - id: 2
+    name: angry_customer_refund_escalation
+    difficulty: hard
+    description: >
+      Agent must de-escalate an extremely angry customer, issue a refund, and
+      escalate to a supervisor — all while maintaining empathy and professionalism.
+
+# Action space
+action_space:
+  type: discrete
+  actions:
+    - name: reply
+      description: Send a response message to the customer.
+    - name: refund
+      description: Issue a refund for the customer's order.
+    - name: escalate
+      description: Escalate the case to a human supervisor.
+    - name: ask_info
+      description: Ask the customer for additional information.
+
+# Observation space
+observation_space:
+  fields:
+    - name: customer_message
+      type: string
+      description: Latest customer message.
+    - name: conversation_history
+      type: list[dict]
+      description: Full turn-by-turn conversation history.
+    - name: sentiment
+      type: string
+      enum: [positive, neutral, frustrated, angry]
+    - name: issue_type
+      type: string
+      description: Category of the customer issue.
+    - name: turn
+      type: integer
+    - name: max_turns
+      type: integer
+    - name: task_id
+      type: integer
+    - name: task_difficulty
+      type: string
+
+# Reward properties
+reward:
+  type: dense
+  range: [-1.0, 1.0]
+  description: >
+    Partial credit reward decomposed into intent correctness (+0.40),
+    helpfulness (+0.30), polite tone (+0.20), and penalties for wrong
+    actions (−0.50) or empty messages (−0.20).
+
+# API endpoints
+endpoints:
+  reset: POST /reset
+  step: POST /step
+  state: GET /state
+  tasks: GET /tasks
+  grader: GET /grader
+  baseline: GET /baseline
+  health: GET /
+
+# Deployment
+deployment:
+  platform: huggingface-spaces
+  sdk: docker
+  port: 7860
+  tags:
+    - openenv
+    - customer-support
+    - rl-environment
+    - agent-evaluation
