@@ -74,7 +74,7 @@ def _grade_task_0(history: List[Dict[str, str]], final_state: Dict[str, Any]) ->
     if _contains_any(all_text, polite_keywords):
         score += 0.20
 
-    return round(max(0.0, min(1.0, score)), 4)
+    return round(max(0.001, min(0.999, score)), 4)
 
 
 # ---------------------------------------------------------------------------
@@ -125,7 +125,7 @@ def _grade_task_1(history: List[Dict[str, str]], final_state: Dict[str, Any]) ->
     if used_escalate and not used_refund:
         score -= 0.20
 
-    return round(max(0.0, min(1.0, score)), 4)
+    return round(max(0.001, min(0.999, score)), 4)
 
 
 # ---------------------------------------------------------------------------
@@ -185,7 +185,7 @@ def _grade_task_2(history: List[Dict[str, str]], final_state: Dict[str, Any]) ->
     if used_ask_info:
         score -= 0.25
 
-    return round(max(0.0, min(1.0, score)), 4)
+    return round(max(0.001, min(0.999, score)), 4)
 
 
 # ---------------------------------------------------------------------------
@@ -211,7 +211,7 @@ def grade_episode(
         {
             "task_id": int,
             "difficulty": str,
-            "score": float,          # 0.0 – 1.0
+            "score": float,          # strictly (0.0, 1.0) — never 0.0 or 1.0 exactly
             "turns_used": int,
         }
     """
@@ -221,7 +221,10 @@ def grade_episode(
     from env.tasks import get_task  # local import to avoid circular deps
 
     task = get_task(task_id)
-    score = _GRADERS[task_id](history, final_state)
+    raw_score = _GRADERS[task_id](history, final_state)
+
+    # Validator requires score strictly in (0, 1) — i.e. not 0.0 and not 1.0
+    score = round(max(0.001, min(0.999, raw_score)), 4)
     turns_used = final_state.get("turn", 0)
 
     return {
